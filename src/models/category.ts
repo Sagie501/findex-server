@@ -7,6 +7,10 @@ const categorySchema = new Schema({
 
 export const categoryModel = mongoose.model('category', categorySchema);
 
+export function addCategory(newCategory): Promise<any> {
+  return newCategory.save();
+}
+
 export function getCategoryByName(name): Promise<any> {
   return categoryModel.findOne({ name }).exec();
 }
