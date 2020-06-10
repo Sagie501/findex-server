@@ -1,12 +1,21 @@
-import express from 'express';
+import * as express from 'express';
 import { Config } from './environment/config';
 import { Environment } from './environment/environment';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+import * as cors from 'cors';
+import * as bodyParser from 'body-parser';
+import * as mongoose from 'mongoose';
 
 const app = express();
 
 const config: Config = Environment.getConfig();
+
+// Connect mongoose to our database
+mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true, useUnifiedTopology: true})
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("Connected to db!")
+});
 
 // Middleware for CORS
 app.use(cors());
