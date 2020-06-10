@@ -5,12 +5,12 @@ const categorySchema = new Schema({
   name: { type: String, required: true, unique: true }
 });
 
-export const categoryModel = mongoose.model('category', categorySchema);
+export const categoriesModel = mongoose.model('category', categorySchema);
 
 export function addCategory(newCategory): Promise<any> {
   return newCategory.save();
 }
 
 export function getCategoryByName(name): Promise<any> {
-  return categoryModel.findOne({ name }).exec();
+  return categoriesModel.findOne({ name }).exec();
 }
