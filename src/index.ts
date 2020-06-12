@@ -9,15 +9,15 @@ import { router as usersRouter } from './controllers/users';
 import { router as itemsRouter } from './controllers/items';
 import { router as categoriesRouter } from './controllers/categories';
 import { router as messagesRouter } from './controllers/messages';
-import { Server } from 'http';
 
 const app = express();
-const io = socketIo(new Server(app));
+const server = require('http').Server(app);
+const io = socketIo(server);
 
 const config: Config = Environment.getConfig();
 
 // Connect mongoose to our database
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -67,6 +67,6 @@ io.on('connection', (socket) => {
   });
 });
 
-app.listen({ port: config.port }, () => {
+server.listen(config.port, () => {
   console.log(`Server ready at port: ${config.port}`)
 });

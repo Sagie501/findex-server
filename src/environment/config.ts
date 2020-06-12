@@ -1,5 +1,7 @@
 const baseConfig: Config = {
-  port: parseInt(process.env.PORT, 10) || 6060
+  port: parseInt(process.env.PORT, 10) || 3000,
+  database: 'mongodb+srv://user:rutikevesh@myspot-t0vxd.mongodb.net/test?retryWrites=true&w=majority'
+  // database: 'mongodb://localhost/test'
 };
 
 export const config: EnvironmentConfig = {
@@ -18,4 +20,5 @@ export interface EnvironmentConfig {
 
 export interface Config {
   port: number;
+  database: string;
 }
