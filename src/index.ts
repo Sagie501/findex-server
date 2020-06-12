@@ -4,6 +4,7 @@ import { Environment } from './environment/environment';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
+import { router as categoriesRouter } from './controllers/categories';
 
 const app = express();
 
@@ -23,6 +24,9 @@ app.use(cors());
 // Middleware for bodyparsing using both json and urlencoding
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Middlewares for the application api
+app.use('/api/categories', categoriesRouter);
 
 app.listen({ port: config.port }, () => {
   console.log(`Server ready at port: ${config.port}`)

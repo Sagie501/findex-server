@@ -11,6 +11,14 @@ export function addCategory(newCategory): Promise<any> {
   return newCategory.save();
 }
 
+export function getAllCategories(): Promise<any> {
+  return categoriesModel.find().exec();
+}
+
+export function deleteCategory(name): Promise<any> {
+  return categoriesModel.deleteOne({name}).exec();
+}
+
 export function getCategoryByName(name): Promise<any> {
   return categoriesModel.findOne({ name }).exec();
 }
