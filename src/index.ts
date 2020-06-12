@@ -4,8 +4,9 @@ import { Environment } from './environment/environment';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
-import { router as categoriesRouter } from './controllers/categories';
 import { router as usersRouter } from './controllers/users';
+import { router as itemsRouter } from './controllers/items';
+import { router as categoriesRouter } from './controllers/categories';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(bodyParser.json());
 
 // Middlewares for the application api
 app.use('/api/users', usersRouter);
+app.use('/api/items', itemsRouter);
 app.use('/api/categories', categoriesRouter);
 
 app.listen({ port: config.port }, () => {

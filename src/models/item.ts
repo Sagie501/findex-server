@@ -16,8 +16,8 @@ export function getAllItems(): Promise<any> {
   return itemsModel.find().populate('category').populate('username').exec();
 }
 
-export function getItemsByUsername(username): Promise<any> {
-  return itemsModel.find({ username }).populate("category").populate("username").exec();
+export function getItemsByUserId(userId): Promise<any> {
+  return itemsModel.find({ username: userId }).populate("category").populate("username").exec();
 }
 
 // TODO: Check this function implementation
@@ -50,4 +50,8 @@ export function getItemsAmountInEachCategory(): Promise<any> {
       }
     }
   ]).exec();
+}
+
+export function createNewItem(item): Promise<any> {
+  return item.save();
 }
