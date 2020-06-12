@@ -5,6 +5,7 @@ import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import { router as categoriesRouter } from './controllers/categories';
+import { router as usersRouter } from './controllers/users';
 
 const app = express();
 
@@ -15,7 +16,7 @@ mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true, useUnifiedT
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log("Connected to db!")
+  console.log('Connected to db!');
 });
 
 // Middleware for CORS
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Middlewares for the application api
+app.use('/api/users', usersRouter);
 app.use('/api/categories', categoriesRouter);
 
 app.listen({ port: config.port }, () => {
