@@ -45,10 +45,6 @@ export function editUser(editedUser): Promise<any> {
   return usersModel.findOneAndUpdate({ username: editedUser.username }, editedUser, {upsert: true, new: true, runValidators: true}).exec();
 }
 
-export function addUser(newUser): Promise<any> {
-  return newUser.save();
-}
-
 export function addItemToUser(item, username, callback) {
   usersModel.findOne({ username }, (err: any, user: any) => {
     if (err || !user || !user.items) {
