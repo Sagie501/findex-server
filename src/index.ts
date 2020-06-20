@@ -44,16 +44,19 @@ let clients = [];
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.on('sendUser', (id)=> {
-    clients.push({
-      id: id,
-      socket: socket.id
-    });
+  socket.on('sendUser', (id) => {
 
-    console.log(clients);
+    if (clients.findIndex((client) => client.id === id) === -1) {
+      clients.push({
+        id: id,
+        socket: socket.id
+      });
+
+      console.log(clients);
+    }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (id) => {
     let index = clients.find((client, i) => {
       if (client.socket == socket.id) {
         return i;
