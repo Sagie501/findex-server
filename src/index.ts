@@ -57,13 +57,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    let index = clients.find((client, i) => {
-      if (client.socket == socket.id) {
-        return i;
-      }
-    });
+    let index = clients.findIndex((client) => client.socket == socket.id);
 
-    clients.splice(index, 1);
+    if (index !== -1) {
+      clients.splice(index, 1);
+    }
     console.log(clients);
 
     console.log('user disconnected');

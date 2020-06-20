@@ -25,7 +25,10 @@ router.post('/', async (req, res) => {
       let index = (global as any).clients.findIndex((client) => (client.id == req.body.destUser));
 
       if (index !== -1) {
-        (global as any).io.sockets.connected[(global as any).clients[index].socket].emit('newMessage', req.body.title);
+        (global as any).io.sockets.connected[(global as any).clients[index].socket].emit('newMessage', {
+          sourceUser: req.body.sourceUser,
+          title: req.body.title
+        });
       }
     }
   });
