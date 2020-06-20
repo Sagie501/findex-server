@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', (id) => {
+  socket.on('disconnect', () => {
     let index = clients.find((client, i) => {
       if (client.socket == socket.id) {
         return i;
