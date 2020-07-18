@@ -6,7 +6,8 @@ import {
   getItemsAmountInEachCategory,
   getItemsByCategory,
   getItemsByUserId,
-  itemsModel
+  itemsModel,
+  filterItems
 } from '../models/item';
 import { addItemToUser, getUserByUsername } from '../models/users';
 import { getCategoryByName } from '../models/category';
@@ -49,6 +50,19 @@ router.get('/byCategory/:category', (req, res) => {
     res.json({ success: false, message: `Failed to get item by category. Error: ${err}` });
   });
 });
+
+router.get('/filterByParams/:name/:category/:city', (req, res) => {
+  getCategoryByName(req.params.category).then((categoryId) => {
+    filterItems(new RegExp('.*' + req.params.name + '.*', "i"), categoryId, new RegExp('.*' + req.params.city + '.*', "i")).then((items) => {
+      res.write(JSON.stringify({ success: true, items: items }, null, 2));
+      res.end();
+    }, (err) => {
+      res.json({ success: false, message: `Failed to filter items. Error: ${err}` });
+    });
+  }, (err) => {
+    res.json({ success: false, message: `Failed to filter items. Error: ${err}` });
+  });
+})
 
 router.post('/', (req, res) => {
   Promise.all([getCategoryByName(req.body.category), getUserByUsername(req.body.username)]).then(([category, user]) => {

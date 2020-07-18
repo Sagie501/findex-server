@@ -16,6 +16,10 @@ export function getAllItems(): Promise<any> {
   return itemsModel.find().populate('category').populate('username').exec();
 }
 
+export function filterItems(itemName: RegExp, categoty: string, city: RegExp): Promise<any> {
+  return itemsModel.find({$and: [ {name: itemName}, {city: city}, {category: categoty}] }).populate("category").populate("username").exec();
+}
+
 export function getItemsByUserId(userId): Promise<any> {
   return itemsModel.find({ username: userId }).populate("category").populate("username").exec();
 }
