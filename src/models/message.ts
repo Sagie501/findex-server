@@ -28,7 +28,7 @@ export function filterMessages(
   let query = {
     $and: [{ sourceUser: source }, { destUser: dest }, { title }, { content }],
   };
-  return messagesModel.find(query).exec();
+  return messagesModel.find(query).populate("sourceUser").exec();
 }
 
 export async function totalMessagesAmount(username): Promise<number> {
