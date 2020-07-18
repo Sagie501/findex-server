@@ -74,16 +74,22 @@ router.get("/byUser/:username", (req, res) => {
   );
 });
 
-router.get("/filterMessages/:source/:dest/:title/:content", (req, res) => {
-  getUserByUsername(req.params.source).then(
+router.get("/filterMessages/:source/:dest/:title?/:content?", (req, res) => {
+  getUserByUsername(new RegExp(".*" + req.params.source + ".*", "i")).then(
     (sourceUser) => {
       getUserByUsername(req.params.dest).then(
         (destUser) => {
           filterMessages(
             sourceUser,
             destUser,
-            new RegExp(".*" + req.params.title + ".*", "i"),
-            new RegExp(".*" + req.params.content + ".*", "i")
+            new RegExp(
+              ".*" + req.params.title ? req.params.title : "" + ".*",
+              "i"
+            ),
+            new RegExp(
+              ".*" + req.params.content ? req.params.content : "" + ".*",
+              "i"
+            )
           ).then(
             (messages) => {
               res.write(
