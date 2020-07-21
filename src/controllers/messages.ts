@@ -154,3 +154,16 @@ router.get("/all/all", (req, res) => {
     }
   );
 });
+
+router.delete("/:id", (req, res) => {
+  messagesModel.deleteOne({ _id: req.params.id }, (err) => {
+    if (err)
+      res.json({
+        success: false,
+        message: `Failed to delete message. Error: ${err}`,
+      });
+    else {
+      res.json({ success: true, message: `Message deleted successfuly` });
+    }
+  });
+});
