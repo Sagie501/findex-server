@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Schema } from 'mongoose';
+var createCountMinSketch = require("count-min-sketch");
 
 const itemSchema = new Schema({
   name: { type: String, required: true },
@@ -45,15 +46,13 @@ export function getItemsAmountByKind(): Promise<any> {
   ]).exec();
 }
 
-export function getItemsAmountInEachCategory(): Promise<any> {
-  return itemsModel.aggregate([
-    {
-      $group: {
-        _id: '$category',
-        count: {$sum: 1}
-      }
-    }
-  ]).exec();
+export async function getItemsAmountInEachCategory(): Promise<any> {
+  let allItems = await getAllItems();
+  let sketch = createCountMinSketch();
+  for (let item of allItems) {
+    sketch.update(item.category.name, 1);
+  }
+  return sketch.toJSON();
 }
 
 export function createNewItem(item): Promise<any> {
