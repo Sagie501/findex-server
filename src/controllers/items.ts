@@ -80,17 +80,42 @@ router.get("/byCategory/:category", (req, res) => {
 
 router.get("/filterByParams/:name/:category?/:city?", (req, res) => {
   req.params.name = req.params.name === "*" ? "" : req.params.name;
-  req.params.category = req.params.category === "*" ? "" : req.params.category;
   req.params.city = req.params.city === "*" ? "" : req.params.city;
 
+  if (req.params.category === "*") {
+    filterItemsNameCity(req, res);
+  } else {
+    filterItemsNameCityCategory(req, res);
+  }
+});
+
+const filterItemsNameCity = (req, res) => {
+  filterItems(
+    new RegExp(".*" + req.params.name + ".*", "i"),
+    new RegExp(".*" + req.params.city + ".*", "i")
+  ).then(
+    (items) => {
+      res.write(JSON.stringify({ success: true, items: items }, null, 2));
+      res.end();
+    },
+    (err) => {
+      res.json({
+        success: false,
+        message: `Failed to filter items. Error: ${err}`,
+      });
+    }
+  );
+};
+
+const filterItemsNameCityCategory = (req, res) => {
   getCategoryByName(
     new RegExp(req.params.category ? req.params.category : "")
   ).then(
     (categoryId) => {
       filterItems(
         new RegExp(".*" + req.params.name + ".*", "i"),
-        categoryId,
-        new RegExp(".*" + req.params.city ? req.params.city : "" + ".*", "i")
+        new RegExp(".*" + req.params.city + ".*", "i"),
+        categoryId
       ).then(
         (items) => {
           res.write(JSON.stringify({ success: true, items: items }, null, 2));
@@ -111,7 +136,7 @@ router.get("/filterByParams/:name/:category?/:city?", (req, res) => {
       });
     }
   );
-});
+};
 
 router.post("/", (req, res) => {
   Promise.all([
