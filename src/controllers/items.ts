@@ -185,7 +185,7 @@ router.get("/getItemsAmountByKind", (req, res) => {
       console.error(err);
       res.json({
         success: false,
-        message: `Failed to count items in each category. Error: ${err}. req: ${req}`,
+        message: `Failed to count items in each kind. Error: ${err}. req: ${req}`,
       });
     }
   );

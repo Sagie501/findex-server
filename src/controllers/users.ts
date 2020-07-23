@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
   };
 
   editUser(newUser).then((newUser) => {
-    res.json({success:true, message: `Added successfully: ${newUser}`});
+    res.json({success:true, message: `Added successfully: ${newUser}`, user: newUser});
   }, (err) => {
     res.json({success: false, message: `Failed to create a new user. Error: ${err}. req: ${req}`});
   });
