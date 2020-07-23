@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import * as mongoose from "mongoose";
+import { Schema } from "mongoose";
 var createCountMinSketch = require("count-min-sketch");
 
 const itemSchema = new Schema({
@@ -8,42 +8,70 @@ const itemSchema = new Schema({
   kind: { type: String, enum: ["Request", "ForDelivery"], required: true },
   category: { type: Schema.Types.ObjectId, ref: "category", required: true },
   city: { type: String, require: true },
-  username: { type: Schema.Types.ObjectId, ref: "user", required: true }
+  username: { type: Schema.Types.ObjectId, ref: "user", required: true },
 });
 
-export const itemsModel = mongoose.model('item', itemSchema);
+export const itemsModel = mongoose.model("item", itemSchema);
 
 export function getAllItems(): Promise<any> {
-  return itemsModel.find().populate('category').populate('username').exec();
+  return itemsModel.find().populate("category").populate("username").exec();
 }
 
-export function filterItems(itemName: RegExp, categoty: string, city: RegExp): Promise<any> {
-  return itemsModel.find({$and: [ {name: itemName}, {city: city}, {category: categoty}] }).populate("category").populate("username").exec();
+export function filterItems(
+  itemName: RegExp,
+  city: RegExp,
+  categoty?: string
+): Promise<any> {
+  let filters = categoty
+    ? [{ name: itemName }, { city: city }, { category: categoty }]
+    : [{ name: itemName }, { city: city }];
+
+  return itemsModel
+    .find({
+      $and: filters,
+    })
+    .populate("category")
+    .populate("username")
+    .exec();
 }
 
 export function getItemsByUserId(userId): Promise<any> {
-  return itemsModel.find({ username: userId }).populate("category").populate("username").exec();
+  return itemsModel
+    .find({ username: userId })
+    .populate("category")
+    .populate("username")
+    .exec();
 }
 
 // TODO: Check this function implementation
 export function getItemsByCategory(category, callback) {
-  let query = {category: category};
+  let query = { category: category };
 
-  itemsModel.find(query).count().exec(function (err, count) {
-    let random = Math.floor(Math.random() * count);
-    return itemsModel.find(query).find().limit(-1).skip(random).exec(callback);
-  })
+  itemsModel
+    .find(query)
+    .count()
+    .exec(function (err, count) {
+      let random = Math.floor(Math.random() * count);
+      return itemsModel
+        .find(query)
+        .find()
+        .limit(-1)
+        .skip(random)
+        .exec(callback);
+    });
 }
 
 export function getItemsAmountByKind(): Promise<any> {
-  return itemsModel.aggregate([
-    {
-      $group: {
-        _id: '$kind',
-        count: {$sum: 1}
-      }
-    }
-  ]).exec();
+  return itemsModel
+    .aggregate([
+      {
+        $group: {
+          _id: "$kind",
+          count: { $sum: 1 },
+        },
+      },
+    ])
+    .exec();
 }
 
 export async function getItemsAmountInEachCategory(): Promise<any> {
