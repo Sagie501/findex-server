@@ -10,7 +10,7 @@ import {
   filterItems,
 } from "../models/item";
 import { addItemToUser, getUserByUsername } from "../models/users";
-import { getCategoryByName } from "../models/category";
+import { getCategoryByName, getCategoriesByName } from "../models/category";
 
 export const router = Router();
 
@@ -108,14 +108,14 @@ const filterItemsNameCity = (req, res) => {
 };
 
 const filterItemsNameCityCategory = (req, res) => {
-  getCategoryByName(
+  getCategoriesByName(
     new RegExp(req.params.category ? req.params.category : "")
   ).then(
-    (categoryId) => {
+    (categories) => {
       filterItems(
         new RegExp(".*" + req.params.name + ".*", "i"),
         new RegExp(".*" + req.params.city + ".*", "i"),
-        categoryId
+        { category: { $in: categories.map((category) => category._id) } }
       ).then(
         (items) => {
           res.write(JSON.stringify({ success: true, items: items }, null, 2));

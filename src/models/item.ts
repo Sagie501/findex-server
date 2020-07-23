@@ -20,10 +20,10 @@ export function getAllItems(): Promise<any> {
 export function filterItems(
   itemName: RegExp,
   city: RegExp,
-  categoty?: string
+  categoties?: any
 ): Promise<any> {
-  let filters = categoty
-    ? [{ name: itemName }, { city: city }, { category: categoty }]
+  let filters = categoties
+    ? [{ name: itemName }, { city: city }, categoties]
     : [{ name: itemName }, { city: city }];
 
   return itemsModel
